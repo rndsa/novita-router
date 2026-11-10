@@ -1,0 +1,18 @@
+{
+  "ipAllowlist": {
+    "enabled": false,
+    "allowed": [
+      "127.0.0.1",
+      "::1"
+    ]
+  },
+  "rateLimit": {
+    "enabled": true,
+    "maxPerMinute": 60
+  },
+  "apiProtection": {
+    "requireToken": false,
+    "customToken": "change-this-api-token"
+  },
+  "adminPassword": "change-this-password"
+}

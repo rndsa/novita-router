@@ -1,0 +1,20 @@
+# Secrets & local runtime state (NEVER commit)
+keys.json
+security.json
+managed_keys.json
+.env
+.env.*
+*.local.json
+
+# Backups & temporary artifacts
+*.bak
+public/*.bak
+public/pm.html
+*.log
+npm-debug.log*
+
+# Dependencies & caches
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store

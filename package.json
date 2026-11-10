@@ -1,0 +1,10 @@
+{
+  "name": "novita-router",
+  "version": "1.0.0",
+  "description": "High-availability OpenAI & Sandbox router for Novita AI with multi-key failover",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

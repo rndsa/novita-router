@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id" class="dark" data-impeccable-ignore="hard-offset-shadow">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Novita Router</title>
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            canvas: '#090a0f',
+            card: '#13151f',
+            cardInner: '#0c0d14',
+            edge: '#3f475d',
+            edgeLight: '#5d6785',
+            ink: '#ffffff',
+            muted: '#9ca3af',
+            dim: '#6b7280',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #090a0f;
+      color: #ffffff;
+      font-family: '"DM Sans"', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    h1 {
+      font-family: '"Space Grotesk"', sans-serif;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    h2 {
+      font-family: '"Space Grotesk"', sans-serif;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .neo-card {
+      background-color: #13151f;
+      border: 2px solid #3f475d;
+      box-shadow: 3px 3px 0px 0px #000000;
+      padding: 14px;
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .view-btn {
+      color: #9ca3af;
+      font-weight: 700;
+      transition: all 0.1s ease;
+      white-space: nowrap;
+    }
+    .view-btn:hover {
+      color: #ffffff;
+    }
+    .view-btn.active-tab {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border: 2px solid #ffffff !important;
+      font-weight: 800 !important;
+    }
+
+    .neo-btn-primary {
+      background-color: #ffffff;
+      color: #090a0f;
+      border: 2px solid #ffffff;
+      box-shadow: 2px 2px 0px 0px #000000;
+      font-family: '"Space Grotesk"', sans-serif;
+      font-weight: 700;
+      transition: all 0.1s ease;
+    }
+    .neo-btn-primary:active {
+      transform: translate(1px, 1px);
+      box-shadow: 0px 0px 0px 0px transparent !important;
+    }
+
+    .neo-btn-secondary {
+      background-color: #0c0d14;
+      color: #ffffff;
+      border: 2px solid #3f475d;
+      box-shadow: 2px 2px 0px 0px #000000;
+      font-family: '"JetBrains Mono"', monospace;
+      font-weight: 600;
+      transition: all 0.1s ease;
+    }
+    .neo-btn-secondary:hover {
+      border-color: #5d6785;
+    }
+    .neo-btn-secondary:active {
+      transform: translate(1px, 1px);
+      box-shadow: 0px 0px 0px 0px transparent !important;
+    }
+
+    .pill-filter {
+      border: 1px solid #3f475d;
+      background: #0c0d14;
+      color: #9ca3af;
+      font-family: '"JetBrains Mono"', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      transition: all 0.1s;
+      white-space: nowrap;
+    }
+    .pill-filter.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      font-weight: 700;
+    }
+
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #090a0f; }
+    ::-webkit-scrollbar-thumb { background: #262c3e; border-radius: 2px; }
+  </style>
+</head>
+<body class="min-h-screen bg-canvas text-ink p-3 sm:p-5 lg:p-7 flex flex-col justify-between selection:bg-white selection:text-black">
+
+  <div class="max-w-4xl w-full mx-auto space-y-4">
+
+    <!-- HEADER: CLEAN & MOBILE-READY -->
+    <header class="neo-card space-y-3">
+      
+      <!-- Top Row: Brand & Actions -->
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 border-2 border-edgeLight bg-white text-canvas font-mono font-bold text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_#000000]">
+            NR
+          </div>
+          <span class="font-display font-bold text-sm uppercase tracking-tight text-white">Novita Router</span>
+          <span class="border-2 border-[#166534] bg-[#052e16] text-[#4ade80] font-mono font-bold text-[11px] px-1.5 py-0.2">
+            :8181
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button onclick="fetchStatus()" title="Sync" class="neo-btn-secondary p-1.5 flex items-center justify-center">
+            <svg id="refresh-icon" class="w-3.5 h-3.5 text-muted hover:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
+          </button>
+
+          <a href="/logout" class="neo-btn-secondary px-2 py-1 text-xs uppercase text-muted hover:text-red-400">
+            Exit
+          </a>
+        </div>
+      </div>
+
+      <!-- Segmented Nav: Smooth Scrollable Mobile Tab Bar -->
+      <nav class="flex items-center gap-1 overflow-x-auto no-scrollbar border-2 border-edge bg-cardInner p-1 text-xs font-mono uppercase shadow-[2px_2px_0px_0px_#000000]">
+        <button onclick="switchTab('overview')" id="tab-overview" class="view-btn active-tab px-3 py-1.5 flex-shrink-0 text-center">Overview</button>
+        <button onclick="switchTab('models')" id="tab-models" class="view-btn px-3 py-1.5 flex-shrink-0 text-center">Models (99)</button>
+        <button onclick="switchTab('keys')" id="tab-keys" class="view-btn px-3 py-1.5 flex-shrink-0 text-center">Keys</button>
+        <button onclick="switchTab('security')" id="tab-security" class="view-btn px-3 py-1.5 flex-shrink-0 text-center">Security</button>
+        <button onclick="switchTab('sandbox')" id="tab-sandbox" class="view-btn px-3 py-1.5 flex-shrink-0 text-center">Sandbox</button>
+        <button onclick="switchTab('telemetry')" id="tab-telemetry" class="view-btn px-3 py-1.5 flex-shrink-0 text-center">Logs</button>
+      </nav>
+
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="w-full space-y-4">
+
+      <!-- VIEW 1: OVERVIEW (RAIL-CLEAN, ZERO CLUTTER) -->
+      <div id="view-overview" class="view-section space-y-4">
+
+        <!-- 4 CRISP KPI TILES -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+          
+          <div class="neo-card space-y-0.5">
+            <span class="text-[11px] font-mono text-muted uppercase tracking-wider block">Saldo Pool</span>
+            <div class="font-display font-bold text-xl sm:text-2xl text-white" id="kpi-total-balance">$0.00</div>
+            <span class="text-[11px] font-mono text-[#4ade80] font-semibold block">Aktif</span>
+          </div>
+
+          <div class="neo-card space-y-0.5">
+            <span class="text-[11px] font-mono text-muted uppercase tracking-wider block">Keys</span>
+            <div class="font-display font-bold text-xl sm:text-2xl text-white" id="kpi-active-keys">0 / 0</div>
+            <span class="text-[11px] font-mono text-muted block" id="kpi-cooling-keys">0 cooldown</span>
+          </div>
+
+          <div class="neo-card space-y-0.5">
+            <span class="text-[11px] font-mono text-muted uppercase tracking-wider block">Requests</span>
+            <div class="font-display font-bold text-xl sm:text-2xl text-white" id="kpi-total-requests">0</div>
+            <span class="text-[11px] font-mono text-[#4ade80] font-semibold block">100% OK</span>
+          </div>
+
+          <div class="neo-card space-y-0.5">
+            <span class="text-[11px] font-mono text-muted uppercase tracking-wider block">Failover</span>
+            <div class="font-display font-bold text-xl sm:text-2xl text-white" id="kpi-failover-events">0</div>
+            <span class="text-[11px] font-mono text-muted block">0 trigger</span>
+          </div>
+
+        </section>
+
+        <!-- GATEWAY ROUTE HERO CARD -->
+        <section class="neo-card space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <h2 class="text-white uppercase tracking-wider">Gateway Route</h2>
+            <span class="border border-[#166534] bg-[#052e16] text-[#4ade80] font-mono font-bold text-[11px] px-1.5 py-0.2">
+              98% OK
+            </span>
+          </div>
+
+          <!-- Base URL Endpoint -->
+          <div class="p-2.5 border-2 border-edge bg-cardInner flex items-center justify-between gap-2 text-xs font-mono shadow-[2px_2px_0px_0px_#000000]">
+            <span id="gateway-base-url" class="text-white font-semibold truncate text-xs sm:text-sm">http://127.0.0.1:8181/v1</span>
+            <button onclick="copyText(document.getElementById('gateway-base-url').innerText, this)" class="neo-btn-primary px-3 py-1 text-xs uppercase flex-shrink-0">
+              Salin
+            </button>
+          </div>
+
+          <!-- Clean Info Card with CTA to Models Tab -->
+          <div class="p-3 border-2 border-edge bg-cardInner space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono text-white font-semibold">Tersedia 99 Model AI</span>
+              <span class="text-[11px] font-mono text-[#4ade80]">DeepSeek • LLaMA • Qwen • Kimi</span>
+            </div>
+            <p class="text-xs text-muted font-mono leading-relaxed">
+              Daftar model dipisah ke tab khusus agar tampilan tetap rapi dan ringkas.
+            </p>
+            <button onclick="switchTab('models')" class="w-full py-2 border-2 border-white bg-white text-black font-display font-bold text-xs uppercase shadow-[2px_2px_0px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px] transition-all">
+              Buka Tab Models (99) →
+            </button>
+          </div>
+        </section>
+
+        <!-- CRISP DIAGNOSTIC STRIP -->
+        <section class="neo-card">
+          <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x-2 divide-edge gap-2 sm:gap-0 text-xs font-mono">
+            <div class="sm:px-3">
+              <span class="text-muted text-[11px] block">HEAP</span>
+              <span class="font-bold text-white text-xs">48.2 MB</span>
+            </div>
+            <div class="sm:px-3 pt-1.5 sm:pt-0">
+              <span class="text-muted text-[11px] block">SANDBOX</span>
+              <span class="font-bold text-[#4ade80] text-xs">Ready</span>
+            </div>
+            <div class="sm:px-3 pt-1.5 sm:pt-0">
+              <span class="text-muted text-[11px] block">SLOTS</span>
+              <span class="font-bold text-white text-xs">10 Cap</span>
+            </div>
+            <div class="sm:px-3 pt-1.5 sm:pt-0">
+              <span class="text-muted text-[11px] block">BACKOFF</span>
+              <span class="font-bold text-white text-xs">60s</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- VIEW 2: DEDICATED MODELS TAB (CLEAN, SEARCHABLE, 99+ MODELS) -->
+      <div id="view-models" class="view-section hidden space-y-4">
+        
+        <div class="neo-card space-y-3">
+          <!-- Header -->
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <div>
+              <h2 class="text-white uppercase tracking-wider">Katalog Model Novita</h2>
+              <span class="text-[11px] font-mono text-muted">99 Model Siap Pakai di /v1/*</span>
+            </div>
+            <span id="tab-model-count" class="border border-[#166534] bg-[#052e16] text-[#4ade80] font-mono font-bold text-[11px] px-2 py-0.5">
+              99 Model
+            </span>
+          </div>
+
+          <!-- Search & Filters -->
+          <div class="space-y-2">
+            <input type="text" id="tab-catalog-search" oninput="filterTabModels()" placeholder="Cari model (misal: deepseek, llama, qwen, kimi, glm)..." class="w-full px-3 py-2 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+            
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="tab-category-pills">
+              <button onclick="setTabModelFilter('all', this)" class="pill-filter active">Semua (99)</button>
+              <button onclick="setTabModelFilter('deepseek', this)" class="pill-filter">DeepSeek</button>
+              <button onclick="setTabModelFilter('llama', this)" class="pill-filter">LLaMA</button>
+              <button onclick="setTabModelFilter('qwen', this)" class="pill-filter">Qwen</button>
+              <button onclick="setTabModelFilter('kimi', this)" class="pill-filter">Kimi</button>
+              <button onclick="setTabModelFilter('glm', this)" class="pill-filter">GLM / MiniMax</button>
+              <button onclick="setTabModelFilter('other', this)" class="pill-filter">Lainnya</button>
+            </div>
+          </div>
+
+          <!-- Model List Container -->
+          <div class="border-2 border-edge divide-y-2 divide-edge bg-cardInner max-h-[520px] overflow-y-auto" id="tab-models-list">
+            <div class="p-4 text-xs font-mono text-muted text-center">Memuat daftar model...</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- VIEW 3: KEYS (ROUTER KEYS + UPSTREAM NOVITA POOL) -->
+      <div id="view-keys" class="view-section hidden space-y-4">
+        
+        <!-- SECTION A: GENERATED ROUTER API KEYS -->
+        <div class="neo-card space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <div>
+              <h2 class="text-white uppercase tracking-wider">Router API Keys</h2>
+              <span class="text-[11px] font-mono text-muted">Akses Client (Cursor, WebUI, Python)</span>
+            </div>
+            <button onclick="openGenerateKeyModal()" class="neo-btn-primary px-3 py-1 text-xs uppercase flex items-center gap-1">
+              + Generate Key
+            </button>
+          </div>
+
+          <!-- Managed Key List -->
+          <div class="border-2 border-edge divide-y-2 divide-edge bg-cardInner" id="managed-keys-list">
+            <div class="p-3 text-xs font-mono text-muted text-center">Memuat daftar API key...</div>
+          </div>
+        </div>
+
+        <!-- SECTION B: UPSTREAM NOVITA POOL -->
+        <div class="neo-card space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <div class="flex items-center gap-2">
+              <h2 class="text-white uppercase tracking-wider">Upstream Novita Pool</h2>
+              <span class="border border-[#166534] bg-[#052e16] text-[#4ade80] font-mono font-bold text-[11px] px-1.5 py-0.2">
+                1 Aktif
+              </span>
+            </div>
+            <button onclick="openAddKeyModal()" class="neo-btn-secondary px-3 py-1 text-xs uppercase flex items-center gap-1">
+              + Akun Novita
+            </button>
+          </div>
+
+          <!-- Upstream Keys Container -->
+          <div class="border-2 border-edge divide-y-2 divide-edge bg-cardInner" id="key-pool-list">
+            <div class="p-3.5 text-xs font-mono text-muted text-center">Memuat pool upstream...</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- VIEW 4: SECURITY & ACCESS CONTROL -->
+      <div id="view-security" class="view-section hidden space-y-4">
+        
+        <!-- SECTION 1: IP ALLOWLIST -->
+        <div class="neo-card space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <div class="flex items-center gap-2">
+              <h2 class="text-white uppercase tracking-wider">IP Allowlist</h2>
+              <span id="badge-ip-status" class="border border-edge bg-cardInner text-muted font-mono font-bold text-[11px] px-1.5 py-0.2">
+                Nonaktif
+              </span>
+            </div>
+
+            <button onclick="toggleIpAllowlist()" id="btn-toggle-ip" class="neo-btn-secondary px-2.5 py-1 text-xs uppercase">
+              Aktifkan
+            </button>
+          </div>
+
+          <!-- Current IP Banner -->
+          <div class="p-2.5 border-2 border-edge bg-cardInner flex items-center justify-between gap-2 text-xs font-mono">
+            <div>
+              <span class="text-muted block text-[11px]">IP Lu Saat Ini:</span>
+              <span id="current-user-ip" class="text-white font-bold text-xs">Mendeteksi...</span>
+            </div>
+            <button onclick="whitelistCurrentIp()" class="neo-btn-primary px-2.5 py-1 text-[11px] uppercase flex-shrink-0">
+              + Izinkan IP Gua
+            </button>
+          </div>
+
+          <!-- Allowed IPs List -->
+          <div class="space-y-1.5">
+            <span class="text-xs font-mono text-muted block uppercase">Daftar IP Diizinkan:</span>
+            <div class="border-2 border-edge divide-y-2 divide-edge bg-cardInner" id="allowed-ip-list">
+              <div class="p-2 text-xs font-mono text-muted">Memuat daftar IP...</div>
+            </div>
+          </div>
+
+          <!-- Add IP Form -->
+          <div class="flex items-center gap-2 pt-1">
+            <input type="text" id="input-new-ip" placeholder="Masukkan IP (misal: 114.122.1.5)" class="flex-1 px-3 py-1.5 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+            <button onclick="addNewAllowedIp()" class="neo-btn-secondary px-3 py-1.5 text-xs uppercase flex-shrink-0">
+              + Tambah
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 2: RATE LIMITING & API BEARER -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          
+          <!-- Rate Limiting Card -->
+          <div class="neo-card space-y-3">
+            <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+              <h2 class="text-white uppercase tracking-wider">Rate Limiting</h2>
+              <button onclick="toggleRateLimit()" id="btn-toggle-rl" class="neo-btn-secondary px-2 py-0.5 text-[11px] uppercase">
+                Aktif
+              </button>
+            </div>
+
+            <div class="space-y-2 text-xs font-mono">
+              <label class="block text-muted text-[11px] uppercase">Maksimal Request / Menit:</label>
+              <div class="flex items-center gap-2">
+                <input type="number" id="input-rl-max" min="10" max="1000" class="flex-1 px-3 py-1.5 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+                <button onclick="saveRateLimitMax()" class="neo-btn-primary px-3 py-1.5 text-xs uppercase flex-shrink-0">
+                  Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- API Protection Token -->
+          <div class="neo-card space-y-3">
+            <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+              <h2 class="text-white uppercase tracking-wider">API Bearer Guard</h2>
+              <button onclick="toggleApiProtection()" id="btn-toggle-api" class="neo-btn-secondary px-2 py-0.5 text-[11px] uppercase">
+                Nonaktif
+              </button>
+            </div>
+
+            <div class="space-y-2 text-xs font-mono">
+              <label class="block text-muted text-[11px] uppercase">Custom Token untuk /v1/*:</label>
+              <div class="flex items-center gap-2">
+                <input type="text" id="input-custom-token" placeholder="nr_..." class="flex-1 px-3 py-1.5 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+                <button onclick="saveCustomToken()" class="neo-btn-primary px-3 py-1.5 text-xs uppercase flex-shrink-0">
+                  Simpan
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SECTION 3: ADMIN PASSWORD -->
+        <div class="neo-card space-y-3">
+          <div class="flex items-center justify-between pb-1.5 border-b-2 border-edge">
+            <h2 class="text-white uppercase tracking-wider">Password Router</h2>
+            <span class="text-[11px] font-mono text-muted">Akses Dashboard</span>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <input type="password" id="input-admin-pass" placeholder="Password baru..." class="flex-1 px-3 py-1.5 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+            <button onclick="changeAdminPassword()" class="neo-btn-primary px-3 py-1.5 text-xs uppercase flex-shrink-0">
+              Ubah Password
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIEW 5: CLOUD SANDBOX -->
+      <div id="view-sandbox" class="view-section hidden space-y-3">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h1 class="font-display font-bold text-white uppercase text-sm">Cloud Sandbox</h1>
+          <div class="flex items-center gap-1.5">
+            <button onclick="setSandboxPreset('sysinfo')" class="neo-btn-secondary px-2.5 py-1 text-[11px] uppercase">Sysinfo</button>
+            <button onclick="setSandboxPreset('math')" class="neo-btn-secondary px-2.5 py-1 text-[11px] uppercase">Prime</button>
+            <button onclick="setSandboxPreset('network')" class="neo-btn-secondary px-2.5 py-1 text-[11px] uppercase">IP</button>
+          </div>
+        </div>
+
+        <div class="neo-card space-y-3">
+          <textarea id="sb-code" rows="5" class="w-full p-2.5 border-2 border-edge bg-cardInner text-xs font-mono text-[#4ade80] focus:outline-none focus:border-edgeLight leading-relaxed resize-none" spellcheck="false">import sys, platform, os
+print(f"OS: {platform.system()} {platform.release()}")
+print(f"Python: {sys.version.split()[0]} | Cores: {os.cpu_count()}")</textarea>
+
+          <div class="flex items-center justify-between">
+            <span id="sb-status-badge" class="text-xs font-mono text-muted font-medium">Ready</span>
+            <button id="sb-run-btn" onclick="runSandboxCode()" class="neo-btn-primary px-3.5 py-1.5 text-xs uppercase">
+              Jalankan Kode
+            </button>
+          </div>
+
+          <pre id="sb-terminal" class="p-3 border-2 border-edge bg-cardInner text-xs font-mono text-white min-h-[110px] max-h-[240px] overflow-y-auto whitespace-pre-wrap leading-relaxed">Tekan 'Jalankan Kode' untuk eksekusi container...</pre>
+        </div>
+      </div>
+
+      <!-- VIEW 6: TELEMETRY & DOCS -->
+      <div id="view-telemetry" class="view-section hidden space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          
+          <!-- Audit Stream -->
+          <div class="neo-card space-y-2">
+            <h2 class="text-white uppercase tracking-wider pb-1 border-b-2 border-edge">Audit Log</h2>
+            <div class="space-y-1.5 text-xs font-mono max-h-64 overflow-y-auto" id="audit-log-stream">
+              <div class="p-1.5 border-b border-edge/60 flex items-start gap-2">
+                <span class="text-[#4ade80] font-bold">[OK]</span>
+                <span class="text-slate-300">Daemon online :8181</span>
+              </div>
+              <div class="p-1.5 border-b border-edge/60 flex items-start gap-2">
+                <span class="text-muted font-bold">[NET]</span>
+                <span class="text-slate-300">OpenAI-compatible /v1/* ready</span>
+              </div>
+              <div class="p-1.5 border-b border-edge/60 flex items-start gap-2">
+                <span class="text-white font-bold">[KEY]</span>
+                <span class="text-slate-300">Key pool auto-sync active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Integration SDK Docs -->
+          <div class="neo-card space-y-2">
+            <h2 class="text-white uppercase tracking-wider pb-1 border-b-2 border-edge">OpenAI Client</h2>
+            <pre class="p-2.5 border-2 border-edge bg-cardInner text-xs font-mono text-white overflow-x-auto leading-relaxed">from openai import OpenAI
+
+# Gunakan generated key lu:
+client = OpenAI(
+    base_url="<span id="sdk-base-url">http://127.0.0.1:8181/v1</span>",
+    api_key="nr_live_..."
+)
+
+res = client.chat.completions.create(
+    model="deepseek/deepseek-v4.1-flash",
+    messages=[{"role": "user", "content": "Halo!"}]
+)
+print(res.choices[0].message.content)</pre>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- CENTERED MINIMAL FOOTER: BY REN -->
+  <footer class="pt-6 pb-2 text-center text-xs font-mono text-muted tracking-wider uppercase">
+    by ren
+  </footer>
+
+  <!-- MODAL: ADD UPSTREAM NOVITA KEY -->
+  <div id="modal-add-key" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="neo-card max-w-sm w-full space-y-3 shadow-[6px_6px_0px_0px_#000000]">
+      <div class="flex items-center justify-between border-b-2 border-edge pb-2">
+        <h2 class="font-display font-bold text-sm text-white uppercase">+ Tambah Akun Novita</h2>
+        <button onclick="closeAddKeyModal()" class="text-muted hover:text-white p-1">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <input type="password" id="input-new-key" placeholder="sk_..." class="w-full px-3 py-2 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+
+      <div id="add-key-error" class="hidden p-2 border-2 border-red-500 bg-red-950/40 text-red-400 text-xs font-mono"></div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t-2 border-edge">
+        <button onclick="closeAddKeyModal()" class="neo-btn-secondary px-3 py-1 text-xs font-mono uppercase">Batal</button>
+        <button id="btn-save-key" onclick="submitNewKey()" class="neo-btn-primary px-3 py-1 text-xs uppercase">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GENERATE CLIENT ROUTER KEY -->
+  <div id="modal-gen-key" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="neo-card max-w-sm w-full space-y-3 shadow-[6px_6px_0px_0px_#000000]">
+      <div class="flex items-center justify-between border-b-2 border-edge pb-2">
+        <h2 class="font-display font-bold text-sm text-white uppercase">+ Generate Router API Key</h2>
+        <button onclick="closeGenerateKeyModal()" class="text-muted hover:text-white p-1">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div id="gen-key-form" class="space-y-3">
+        <div>
+          <label class="block text-xs font-mono text-muted mb-1 uppercase">Nama / Label Key:</label>
+          <input type="text" id="input-gen-key-name" placeholder="Misal: Cursor IDE / NextChat" class="w-full px-3 py-2 border-2 border-edge bg-cardInner text-xs font-mono text-white focus:outline-none focus:border-white">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t-2 border-edge">
+          <button onclick="closeGenerateKeyModal()" class="neo-btn-secondary px-3 py-1 text-xs font-mono uppercase">Batal</button>
+          <button id="btn-do-gen-key" onclick="submitGenerateKey()" class="neo-btn-primary px-3.5 py-1 text-xs uppercase">Generate</button>
+        </div>
+      </div>
+
+      <!-- Result View -->
+      <div id="gen-key-result" class="hidden space-y-3">
+        <div class="p-2.5 border-2 border-[#166534] bg-[#052e16] text-[#4ade80] text-xs font-mono">
+          ✓ Key berhasil dibuat! Salin sekarang.
+        </div>
+        <div class="p-2.5 border-2 border-edge bg-cardInner flex items-center justify-between gap-2 text-xs font-mono">
+          <span id="display-gen-key" class="text-white font-bold break-all select-all"></span>
+          <button onclick="copyGeneratedKey(this)" class="neo-btn-primary px-3 py-1 text-xs uppercase flex-shrink-0">
+            Salin
+          </button>
+        </div>
+        <div class="flex justify-end pt-2 border-t-2 border-edge">
+          <button onclick="closeGenerateKeyModal()" class="neo-btn-secondary px-4 py-1 text-xs uppercase">Selesai</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    let activeTab = 'overview';
+    let currentSecurity = null;
+    let detectedClientIp = '127.0.0.1';
+    let allUpstreamModels = [];
+    let currentTabModelFilter = 'all';
+
+    function getAuthPass() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qPass = urlParams.get('pass') || urlParams.get('auth');
+      if (qPass) {
+        localStorage.setItem('novita_pass', qPass);
+        return qPass;
+      }
+      return localStorage.getItem('novita_pass') || '';
+    }
+
+    function getHeaders() {
+      const pass = getAuthPass();
+      const h = { 'Content-Type': 'application/json' };
+      if (pass) {
+        h['Authorization'] = 'Bearer ' + pass;
+      }
+      return h;
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active-tab');
+      });
+
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active-tab');
+      }
+
+      const activeSection = document.getElementById(`view-${tab}`);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+      }
+
+      if (tab === 'models') {
+        loadTabModels();
+      }
+      if (tab === 'keys') {
+        fetchManagedKeys();
+      }
+      if (tab === 'security') {
+        fetchSecurity();
+      }
+    }
+
+    async function fetchStatus() {
+      const icon = document.getElementById('refresh-icon');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('/api/status', { headers: getHeaders() });
+        const data = await res.json();
+        
+        if (data && data.pool) {
+          const bal = (data.pool.totalBalanceUSD || 0).toFixed(2);
+          document.getElementById('kpi-total-balance').innerText = `$${bal}`;
+          document.getElementById('kpi-active-keys').innerText = `${data.pool.active} / ${data.pool.total}`;
+          document.getElementById('kpi-cooling-keys').innerText = `${data.pool.coolingDown} cooldown`;
+          document.getElementById('kpi-total-requests').innerText = data.telemetry ? data.telemetry.totalRequests : 0;
+          document.getElementById('kpi-failover-events').innerText = data.telemetry ? data.telemetry.failoverEvents : 0;
+
+          if (data.pool.keys) {
+            renderKeyList(data.pool.keys);
+          }
+        }
+      } catch (err) {
+        console.error('Fetch status error:', err);
+      } finally {
+        if (icon) {
+          setTimeout(() => icon.classList.remove('animate-spin'), 600);
+        }
+      }
+    }
+
+    function renderKeyList(keys) {
+      const container = document.getElementById('key-pool-list');
+      if (!container) return;
+
+      let html = keys.map((k, idx) => {
+        const pct = Math.min(100, Math.max(5, ((k.balanceUSD || 0) / 101.00) * 100)).toFixed(1);
+        return `
+          <div class="p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 truncate">
+                <span class="border border-edge bg-white text-canvas font-mono font-bold text-xs px-2 py-0.5 flex-shrink-0">
+                  #${idx + 1}
+                </span>
+                <span class="font-mono font-semibold text-white text-xs truncate">${k.email}</span>
+              </div>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="font-mono text-xs font-bold text-white">$${(k.balanceUSD || 0).toFixed(2)}</span>
+                <button onclick="deleteKey('${k.keyMasked}')" title="Hapus" class="p-1 text-muted hover:text-red-400">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="w-full bg-card h-2.5 border border-edge p-0.5">
+                <div class="bg-white h-full" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-xs font-mono text-muted mt-1.5">
+                <span>${k.keyMasked}</span>
+                <span class="font-semibold text-white">${pct}% Sisa Quota</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      html += `
+        <div onclick="openAddKeyModal()" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-card/40 transition-colors group">
+          <div class="flex items-center gap-2">
+            <span class="border border-dashed border-edge text-muted font-mono font-bold text-xs px-2 py-0.5">
+              #2
+            </span>
+            <span class="text-xs font-mono text-muted group-hover:text-white transition-colors">Slot Cadangan (Auto-Failover)</span>
+          </div>
+          <span class="neo-btn-secondary px-3 py-1 text-xs uppercase">
+            + Tambah
+          </span>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    /* === DEDICATED MODELS TAB === */
+    async function loadTabModels() {
+      if (allUpstreamModels.length === 0) {
+        const container = document.getElementById('tab-models-list');
+        container.innerHTML = '<div class="p-4 text-xs font-mono text-muted text-center">Mengambil 99 model Novita...</div>';
+        try {
+          const res = await fetch('/api/models', { headers: getHeaders() });
+          const data = await res.json();
+          if (data && Array.isArray(data.models)) {
+            allUpstreamModels = data.models;
+            document.getElementById('tab-model-count').innerText = `${allUpstreamModels.length} Model`;
+            document.getElementById('tab-models').innerText = `Models (${allUpstreamModels.length})`;
+          }
+        } catch (err) {
+          container.innerHTML = `<div class="p-4 text-xs font-mono text-red-400 text-center">Gagal memuat: ${err.message}</div>`;
+          return;
+        }
+      }
+      filterTabModels();
+    }
+
+    function setTabModelFilter(filter, btn) {
+      currentTabModelFilter = filter;
+      document.querySelectorAll('#tab-category-pills .pill-filter').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      filterTabModels();
+    }
+
+    function filterTabModels() {
+      const query = (document.getElementById('tab-catalog-search').value || '').trim().toLowerCase();
+      const container = document.getElementById('tab-models-list');
+      if (!container) return;
+
+      let filtered = allUpstreamModels.filter(m => {
+        const mLower = m.toLowerCase();
+        if (currentTabModelFilter === 'deepseek' && !mLower.includes('deepseek')) return false;
+        if (currentTabModelFilter === 'llama' && !mLower.includes('llama')) return false;
+        if (currentTabModelFilter === 'qwen' && !mLower.includes('qwen')) return false;
+        if (currentTabModelFilter === 'kimi' && !mLower.includes('kimi') && !mLower.includes('moonshot')) return false;
+        if (currentTabModelFilter === 'glm' && !mLower.includes('glm') && !mLower.includes('minimax')) return false;
+        if (currentTabModelFilter === 'other') {
+          if (mLower.includes('deepseek') || mLower.includes('llama') || mLower.includes('qwen') || mLower.includes('kimi') || mLower.includes('moonshot') || mLower.includes('glm')) return false;
+        }
+        if (query && !mLower.includes(query)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="p-4 text-xs font-mono text-muted text-center">Tidak ada model yang cocok.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(model => `
+        <div class="p-2.5 flex items-center justify-between text-xs gap-2 hover:bg-card/40 transition-colors">
+          <div class="min-w-0 flex-1">
+            <span class="font-mono text-white text-xs block break-words leading-snug font-medium">${model}</span>
+          </div>
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <button onclick="copyText('${model}', this)" class="neo-btn-secondary px-2.5 py-1 text-[11px] uppercase">
+              Salin
+            </button>
+            <button onclick="testModelPrompt('${model}')" class="neo-btn-primary px-3 py-1 text-[11px] uppercase">
+              Tes
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* === MANAGED ROUTER API KEYS === */
+    async function fetchManagedKeys() {
+      try {
+        const res = await fetch('/api/managed-keys', { headers: getHeaders() });
+        const data = await res.json();
+        const container = document.getElementById('managed-keys-list');
+        if (!container) return;
+
+        const keys = data.keys || [];
+        if (keys.length === 0) {
+          container.innerHTML = `
+            <div class="p-4 text-center space-y-2">
+              <span class="text-xs font-mono text-muted block">Belum ada API key client.</span>
+              <button onclick="openGenerateKeyModal()" class="neo-btn-primary px-3 py-1 text-xs uppercase">
+                + Generate Key Pertama
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = keys.map(k => {
+          return `
+            <div class="p-3 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-white text-xs font-display uppercase tracking-wide">${k.name}</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono text-muted">${k.requests || 0} reqs</span>
+                  <button onclick="revokeManagedKey('${k.id}', '${k.name}')" title="Hapus Key" class="text-muted hover:text-red-400 p-1">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-1.5 border border-edge bg-card flex items-center justify-between gap-2 text-xs font-mono">
+                <span class="text-muted truncate select-all">${k.keyMasked || k.key}</span>
+                <button onclick="copyText('${k.key}', this)" class="neo-btn-secondary px-2 py-0.5 text-[11px] uppercase flex-shrink-0">
+                  Salin
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Fetch managed keys error:', err);
+      }
+    }
+
+    function openGenerateKeyModal() {
+      document.getElementById('modal-gen-key').classList.remove('hidden');
+      document.getElementById('gen-key-form').classList.remove('hidden');
+      document.getElementById('gen-key-result').classList.add('hidden');
+      document.getElementById('input-gen-key-name').value = '';
+    }
+    function closeGenerateKeyModal() {
+      document.getElementById('modal-gen-key').classList.add('hidden');
+      fetchManagedKeys();
+    }
+
+    async function submitGenerateKey() {
+      const name = document.getElementById('input-gen-key-name').value.trim() || 'API Client';
+      const btn = document.getElementById('btn-do-gen-key');
+      btn.disabled = true;
+      btn.innerText = 'Generating...';
+
+      try {
+        const res = await fetch('/api/managed-keys/create', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (data.success && data.key) {
+          document.getElementById('gen-key-form').classList.add('hidden');
+          document.getElementById('display-gen-key').innerText = data.key;
+          document.getElementById('gen-key-result').classList.remove('hidden');
+        } else {
+          alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+        }
+      } catch (err) {
+        alert('Gagal generate key: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Generate';
+      }
+    }
+
+    function copyGeneratedKey(btn) {
+      const key = document.getElementById('display-gen-key').innerText;
+      copyText(key, btn);
+    }
+
+    async function revokeManagedKey(id, name) {
+      if (!confirm(`Hapus/Revoke API key '${name}'? Klien yang pakai key ini tidak akan bisa request lagi.`)) return;
+      try {
+        const res = await fetch('/api/managed-keys/revoke', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchManagedKeys();
+        } else {
+          alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    /* === SECURITY LOGIC === */
+    async function fetchSecurity() {
+      try {
+        const res = await fetch('/api/security', { headers: getHeaders() });
+        const data = await res.json();
+        if (data && data.config) {
+          currentSecurity = data.config;
+          detectedClientIp = data.currentIp || '127.0.0.1';
+          
+          document.getElementById('current-user-ip').innerText = detectedClientIp;
+          renderSecurityUI();
+        }
+      } catch (err) {
+        console.error('Fetch security error:', err);
+      }
+    }
+
+    function renderSecurityUI() {
+      if (!currentSecurity) return;
+
+      const isIpOn = currentSecurity.ipAllowlist?.enabled;
+      const ipBadge = document.getElementById('badge-ip-status');
+      const ipBtn = document.getElementById('btn-toggle-ip');
+      if (isIpOn) {
+        ipBadge.className = "border border-[#166534] bg-[#052e16] text-[#4ade80] font-mono font-bold text-[11px] px-1.5 py-0.2";
+        ipBadge.innerText = "Aktif";
+        ipBtn.innerText = "Nonaktifkan";
+        ipBtn.className = "neo-btn-primary px-2.5 py-1 text-xs uppercase";
+      } else {
+        ipBadge.className = "border border-edge bg-cardInner text-muted font-mono font-bold text-[11px] px-1.5 py-0.2";
+        ipBadge.innerText = "Nonaktif";
+        ipBtn.innerText = "Aktifkan";
+        ipBtn.className = "neo-btn-secondary px-2.5 py-1 text-xs uppercase";
+      }
+
+      const ipContainer = document.getElementById('allowed-ip-list');
+      const allowed = currentSecurity.ipAllowlist?.allowed || [];
+      if (allowed.length === 0) {
+        ipContainer.innerHTML = '<div class="p-2.5 text-xs font-mono text-muted">Belum ada IP yang diizinkan.</div>';
+      } else {
+        ipContainer.innerHTML = allowed.map((ip) => `
+          <div class="p-2.5 flex items-center justify-between text-xs font-mono">
+            <span class="text-white">${ip} ${ip === detectedClientIp ? '<span class="text-[#4ade80] text-[10px] ml-1.5">[IP Lu]</span>' : ''}</span>
+            <button onclick="removeAllowedIp('${ip}')" class="text-muted hover:text-red-400 p-1.5 min-w-[28px] min-h-[28px] flex items-center justify-center">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      const isRlOn = currentSecurity.rateLimit?.enabled;
+      const rlBtn = document.getElementById('btn-toggle-rl');
+      rlBtn.innerText = isRlOn ? "Aktif" : "Nonaktif";
+      rlBtn.className = isRlOn ? "neo-btn-primary px-2 py-0.5 text-[11px] uppercase" : "neo-btn-secondary px-2 py-0.5 text-[11px] uppercase";
+      document.getElementById('input-rl-max').value = currentSecurity.rateLimit?.maxPerMinute || 60;
+
+      const isApiOn = currentSecurity.apiProtection?.requireToken;
+      const apiBtn = document.getElementById('btn-toggle-api');
+      apiBtn.innerText = isApiOn ? "Aktif" : "Nonaktif";
+      apiBtn.className = isApiOn ? "neo-btn-primary px-2 py-0.5 text-[11px] uppercase" : "neo-btn-secondary px-2 py-0.5 text-[11px] uppercase";
+      document.getElementById('input-custom-token').value = currentSecurity.apiProtection?.customToken || 'change-this-api-token';
+    }
+
+    async function saveSecurityToServer(partial) {
+      try {
+        const res = await fetch('/api/security', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify(partial)
+        });
+        const data = await res.json();
+        if (data.success && data.config) {
+          currentSecurity = data.config;
+          renderSecurityUI();
+        }
+      } catch (err) {
+        alert('Gagal simpan keamanan: ' + err.message);
+      }
+    }
+
+    function toggleIpAllowlist() {
+      const newState = !currentSecurity.ipAllowlist?.enabled;
+      if (newState) {
+        const list = currentSecurity.ipAllowlist?.allowed || [];
+        if (!list.includes(detectedClientIp) && detectedClientIp) {
+          list.push(detectedClientIp);
+        }
+        saveSecurityToServer({
+          ipAllowlist: { enabled: true, allowed: list }
+        });
+      } else {
+        saveSecurityToServer({
+          ipAllowlist: { enabled: false, allowed: currentSecurity.ipAllowlist?.allowed }
+        });
+      }
+    }
+
+    function whitelistCurrentIp() {
+      const list = currentSecurity.ipAllowlist?.allowed || [];
+      if (!list.includes(detectedClientIp) && detectedClientIp) {
+        list.push(detectedClientIp);
+        saveSecurityToServer({
+          ipAllowlist: { enabled: currentSecurity.ipAllowlist?.enabled, allowed: list }
+        });
+      } else {
+        alert('IP lu sudah ada di daftar.');
+      }
+    }
+
+    function addNewAllowedIp() {
+      const val = document.getElementById('input-new-ip').value.trim();
+      if (!val) return;
+      const list = currentSecurity.ipAllowlist?.allowed || [];
+      if (!list.includes(val)) {
+        list.push(val);
+        saveSecurityToServer({
+          ipAllowlist: { enabled: currentSecurity.ipAllowlist?.enabled, allowed: list }
+        });
+        document.getElementById('input-new-ip').value = '';
+      }
+    }
+
+    function removeAllowedIp(ip) {
+      let list = currentSecurity.ipAllowlist?.allowed || [];
+      list = list.filter(item => item !== ip);
+      saveSecurityToServer({
+        ipAllowlist: { enabled: currentSecurity.ipAllowlist?.enabled, allowed: list }
+      });
+    }
+
+    function toggleRateLimit() {
+      const newState = !currentSecurity.rateLimit?.enabled;
+      saveSecurityToServer({
+        rateLimit: { enabled: newState, maxPerMinute: currentSecurity.rateLimit?.maxPerMinute || 60 }
+      });
+    }
+
+    function saveRateLimitMax() {
+      const max = parseInt(document.getElementById('input-rl-max').value, 10);
+      if (isNaN(max) || max < 1) return alert('Masukkan angka valid.');
+      saveSecurityToServer({
+        rateLimit: { enabled: currentSecurity.rateLimit?.enabled, maxPerMinute: max }
+      });
+      alert('Rate limit tersimpan!');
+    }
+
+    function toggleApiProtection() {
+      const newState = !currentSecurity.apiProtection?.requireToken;
+      saveSecurityToServer({
+        apiProtection: {
+          requireToken: newState,
+          customToken: currentSecurity.apiProtection?.customToken || 'change-this-api-token'
+        }
+      });
+    }
+
+    function saveCustomToken() {
+      const token = document.getElementById('input-custom-token').value.trim();
+      if (!token) return alert('Token tidak boleh kosong.');
+      saveSecurityToServer({
+        apiProtection: {
+          requireToken: currentSecurity.apiProtection?.requireToken,
+          customToken: token
+        }
+      });
+      alert('Custom Bearer Token tersimpan!');
+    }
+
+    async function changeAdminPassword() {
+      const newPass = document.getElementById('input-admin-pass').value.trim();
+      if (!newPass) return alert('Password tidak boleh kosong.');
+      if (newPass.length < 6) return alert('Password minimal 6 karakter.');
+      if (!confirm('Ganti password admin router?')) return;
+      
+      try {
+        const res = await fetch('/api/security', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ adminPassword: newPass })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('novita_pass', newPass);
+          history.replaceState(null, '', `/?pass=${encodeURIComponent(newPass)}`);
+          alert('Password berhasil diubah ke: ' + newPass);
+          document.getElementById('input-admin-pass').value = '';
+          fetchSecurity();
+          (function initOriginUrls() {
+      const baseV1 = window.location.origin + '/v1';
+      const gwEl = document.getElementById('gateway-base-url');
+      if (gwEl) gwEl.innerText = baseV1;
+      const sdkEl = document.getElementById('sdk-base-url');
+      if (sdkEl) sdkEl.innerText = baseV1;
+    })();
+    fetchStatus();
+        } else {
+          alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+        }
+      } catch (err) {
+        alert('Gagal ubah password: ' + err.message);
+      }
+    }
+
+    /* === UPSTREAM KEYS === */
+    function openAddKeyModal() {
+      document.getElementById('modal-add-key').classList.remove('hidden');
+      document.getElementById('input-new-key').value = '';
+      document.getElementById('add-key-error').classList.add('hidden');
+    }
+    function closeAddKeyModal() {
+      document.getElementById('modal-add-key').classList.add('hidden');
+    }
+
+    async function submitNewKey() {
+      const key = document.getElementById('input-new-key').value.trim();
+      const errBox = document.getElementById('add-key-error');
+      const btn = document.getElementById('btn-save-key');
+
+      if (!key) {
+        errBox.innerText = 'Key kosong.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Validasi...';
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/keys/add', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ key })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          errBox.innerText = data.error || 'Gagal validasi key.';
+          errBox.classList.remove('hidden');
+        } else {
+          closeAddKeyModal();
+          (function initOriginUrls() {
+      const baseV1 = window.location.origin + '/v1';
+      const gwEl = document.getElementById('gateway-base-url');
+      if (gwEl) gwEl.innerText = baseV1;
+      const sdkEl = document.getElementById('sdk-base-url');
+      if (sdkEl) sdkEl.innerText = baseV1;
+    })();
+    fetchStatus();
+        }
+      } catch (err) {
+        errBox.innerText = `Error: ${err.message}`;
+        errBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Simpan';
+      }
+    }
+
+    async function deleteKey(keyMasked) {
+      if (!confirm(`Hapus key ${keyMasked}?`)) return;
+      try {
+        await fetch('/api/keys/delete', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ keyMasked })
+        });
+        (function initOriginUrls() {
+      const baseV1 = window.location.origin + '/v1';
+      const gwEl = document.getElementById('gateway-base-url');
+      if (gwEl) gwEl.innerText = baseV1;
+      const sdkEl = document.getElementById('sdk-base-url');
+      if (sdkEl) sdkEl.innerText = baseV1;
+    })();
+    fetchStatus();
+      } catch (err) {
+        alert('Gagal: ' + err.message);
+      }
+    }
+
+    /* === PROMPT TESTER === */
+    async function testModelPrompt(model) {
+      const prompt = `Novita status: ${model}. 1 sentence.`;
+      const btn = event.currentTarget;
+      const origText = btn ? btn.innerText : 'Tes';
+      if (btn) {
+        btn.innerText = '...';
+        btn.disabled = true;
+      }
+
+      try {
+        const t0 = Date.now();
+        const res = await fetch('/v1/chat/completions', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            model: model,
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+        const data = await res.json();
+        const dt = Date.now() - t0;
+        
+        if (data.choices && data.choices[0]) {
+          const reply = data.choices[0].message.content;
+          appendAuditLog(`[${model}] (${dt}ms) "${reply}"`);
+          alert(`Respons ${model} (${dt}ms):\n\n${reply}`);
+        } else {
+          const errMsg = data.error?.message || res.status;
+          appendAuditLog(`[ERR ${model}] ${errMsg}`);
+          alert(`Error ${model}: ${errMsg}`);
+        }
+      } catch (err) {
+        appendAuditLog(`[ERR] ${err.message}`);
+        alert(`Error: ${err.message}`);
+      } finally {
+        if (btn) {
+          btn.innerText = origText;
+          btn.disabled = false;
+        }
+        (function initOriginUrls() {
+      const baseV1 = window.location.origin + '/v1';
+      const gwEl = document.getElementById('gateway-base-url');
+      if (gwEl) gwEl.innerText = baseV1;
+      const sdkEl = document.getElementById('sdk-base-url');
+      if (sdkEl) sdkEl.innerText = baseV1;
+    })();
+    fetchStatus();
+      }
+    }
+
+    /* === SANDBOX === */
+    function setSandboxPreset(type) {
+      const editor = document.getElementById('sb-code');
+      if (type === 'sysinfo') {
+        editor.value = `import sys, platform, os
+print(f"OS: {platform.system()} {platform.release()}")
+print(f"Python: {sys.version.split()[0]} | Cores: {os.cpu_count()}")`;
+      } else if (type === 'math') {
+        editor.value = `import math
+primes = [x for x in range(2, 60000) if all(x % d != 0 for d in range(2, int(math.isqrt(x)) + 1))]
+print(f"Primes: {len(primes)} | Max: {primes[-1]}")`;
+      } else if (type === 'network') {
+        editor.value = `import urllib.request, json
+with urllib.request.urlopen("https://api.ipify.org?format=json", timeout=10) as r:
+    print(f"IP: {json.loads(r.read()).get('ip')}")`;
+      }
+    }
+
+    async function runSandboxCode() {
+      const code = document.getElementById('sb-code').value.trim();
+      const terminal = document.getElementById('sb-terminal');
+      const badge = document.getElementById('sb-status-badge');
+      const btn = document.getElementById('sb-run-btn');
+
+      if (!code) return;
+
+      btn.disabled = true;
+      btn.innerText = 'Running...';
+      badge.innerText = 'Executing...';
+      terminal.innerText = 'Spawning container...';
+
+      try {
+        const res = await fetch('/api/sandbox/run', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ code })
+        });
+        const data = await res.json();
+
+        if (!data.success && data.error) {
+          terminal.innerText = `Container Error:\n${data.error}`;
+          badge.innerText = 'Failed';
+          appendAuditLog(`[SANDBOX ERR] ${data.error}`);
+        } else {
+          let output = '';
+          if (data.stdout) output += data.stdout;
+          if (data.stderr) output += `\n[STDERR]\n${data.stderr}`;
+          if (!output.trim()) output = '(0 logs)';
+          terminal.innerText = `[MICROVM ID: ${data.sandbox_id || 'active'}]\n----------------------------------------\n${output}`;
+          badge.innerText = 'OK (200)';
+          appendAuditLog(`[SANDBOX 200] selesai via ${data.keyUsed}`);
+        }
+      } catch (err) {
+        terminal.innerText = `Network Error: ${err.message}`;
+        badge.innerText = 'Error';
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Jalankan Kode';
+      }
+    }
+
+    function appendAuditLog(text) {
+      const stream = document.getElementById('audit-log-stream');
+      if (!stream) return;
+      const el = document.createElement('div');
+      el.className = 'p-1.5 border-b border-edge/60 flex items-start gap-2';
+      el.innerHTML = `<span class="text-[#4ade80] font-bold">[EVENT]</span><span class="text-slate-300">${text}</span>`;
+      stream.insertBefore(el, stream.firstChild);
+    }
+
+    function copyText(str, btn) {
+      navigator.clipboard.writeText(str).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = 'Tersalin!';
+        setTimeout(() => btn.innerText = orig, 1200);
+      });
+    }
+
+    (function initOriginUrls() {
+      const baseV1 = window.location.origin + '/v1';
+      const gwEl = document.getElementById('gateway-base-url');
+      if (gwEl) gwEl.innerText = baseV1;
+      const sdkEl = document.getElementById('sdk-base-url');
+      if (sdkEl) sdkEl.innerText = baseV1;
+    })();
+    fetchStatus();
+  </script>
+
+</body>
+</html>
