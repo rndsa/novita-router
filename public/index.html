@@ -1105,14 +1105,7 @@ print(res.choices[0].message.content)</pre>
           alert('Password berhasil diubah ke: ' + newPass);
           document.getElementById('input-admin-pass').value = '';
           fetchSecurity();
-          (function initOriginUrls() {
-      const baseV1 = window.location.origin + '/v1';
-      const gwEl = document.getElementById('gateway-base-url');
-      if (gwEl) gwEl.innerText = baseV1;
-      const sdkEl = document.getElementById('sdk-base-url');
-      if (sdkEl) sdkEl.innerText = baseV1;
-    })();
-    fetchStatus();
+          fetchStatus();
         } else {
           alert('Gagal: ' + (data.error || 'Terjadi kesalahan'));
         }
@@ -1158,14 +1151,7 @@ print(res.choices[0].message.content)</pre>
           errBox.classList.remove('hidden');
         } else {
           closeAddKeyModal();
-          (function initOriginUrls() {
-      const baseV1 = window.location.origin + '/v1';
-      const gwEl = document.getElementById('gateway-base-url');
-      if (gwEl) gwEl.innerText = baseV1;
-      const sdkEl = document.getElementById('sdk-base-url');
-      if (sdkEl) sdkEl.innerText = baseV1;
-    })();
-    fetchStatus();
+          fetchStatus();
         }
       } catch (err) {
         errBox.innerText = `Error: ${err.message}`;
@@ -1184,14 +1170,7 @@ print(res.choices[0].message.content)</pre>
           headers: getHeaders(),
           body: JSON.stringify({ keyMasked })
         });
-        (function initOriginUrls() {
-      const baseV1 = window.location.origin + '/v1';
-      const gwEl = document.getElementById('gateway-base-url');
-      if (gwEl) gwEl.innerText = baseV1;
-      const sdkEl = document.getElementById('sdk-base-url');
-      if (sdkEl) sdkEl.innerText = baseV1;
-    })();
-    fetchStatus();
+        fetchStatus();
       } catch (err) {
         alert('Gagal: ' + err.message);
       }
@@ -1237,14 +1216,7 @@ print(res.choices[0].message.content)</pre>
           btn.innerText = origText;
           btn.disabled = false;
         }
-        (function initOriginUrls() {
-      const baseV1 = window.location.origin + '/v1';
-      const gwEl = document.getElementById('gateway-base-url');
-      if (gwEl) gwEl.innerText = baseV1;
-      const sdkEl = document.getElementById('sdk-base-url');
-      if (sdkEl) sdkEl.innerText = baseV1;
-    })();
-    fetchStatus();
+        fetchStatus();
       }
     }
 
